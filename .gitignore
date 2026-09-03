@@ -1,0 +1,6 @@
+node_modules/
+.env
+test-results/
+playwright-report/
+tests/**/*-snapshots/**/*-actual.png
+tests/**/*-snapshots/**/*-diff.png
