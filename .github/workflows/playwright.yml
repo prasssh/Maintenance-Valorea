@@ -18,6 +18,15 @@ jobs:
       WP_TEST_RECIPIENT_EMAIL: ${{ secrets.WP_TEST_RECIPIENT_EMAIL }}
 
     steps:
+
+      - name: List Playwright Tests
+        env:
+          CI: true
+        run: |
+          echo "Discovering Playwright tests..."
+          timeout --signal=TERM --kill-after=30s 2m \
+            npx --yes playwright test --list
+            
       - name: Checkout Repository
         uses: actions/checkout@v4
 
