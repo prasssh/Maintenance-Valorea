@@ -28,6 +28,12 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Check Pantheon site
+        run: |
+          echo "Checking site..."
+          curl -I --max-time 30 https://test-valorea.pantheonsite.io
+          echo "Site check completed"
+
       - name: Run Playwright Tests
         run: |
           echo "Starting Playwright..."
