@@ -50,6 +50,9 @@ same baseline.
 npm test
 ```
 
+GitHub Actions also requires these repository secrets for the WordPress admin
+tests: `WP_ADMIN_USER`, `WP_ADMIN_PASS`, and `WP_TEST_RECIPIENT_EMAIL`.
+
 - Pass → nothing visually or functionally regressed on the pages covered.
 - Fail on **visual regression** → open the HTML report (`npm run report`)
   and check the generated diff image. If the change is expected (e.g. the

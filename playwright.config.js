@@ -17,10 +17,11 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: true,
+  fullyParallel: false,
   workers: process.env.CI ? 1 : 3,
   retries: process.env.CI ? 1 : 0,
   timeout: 60_000,
+  globalTimeout: process.env.CI ? 10 * 60 * 1000 : undefined,
   reporter: [['html', { open: 'never' }], ['list']],
 
   expect: {
@@ -35,6 +36,8 @@ export default defineConfig({
 
   use: {
     baseURL: 'https://test-valorea.pantheonsite.io',
+    navigationTimeout: 30_000,
+    actionTimeout: 30_000,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

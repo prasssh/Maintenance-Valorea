@@ -12,6 +12,11 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
 
+    env:
+      WP_ADMIN_USER: ${{ secrets.WP_ADMIN_USER }}
+      WP_ADMIN_PASS: ${{ secrets.WP_ADMIN_PASS }}
+      WP_TEST_RECIPIENT_EMAIL: ${{ secrets.WP_TEST_RECIPIENT_EMAIL }}
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -23,23 +28,57 @@ jobs:
           cache: npm
 
       - name: Install Dependencies
-        run: npm ci
+        run: |
+          timeout --signal=TERM --kill-after=30s 5m npm ci
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+        run: |
+          timeout --signal=TERM --kill-after=30s 8m \
+            npx playwright install --with-deps chromium
 
-      - name: Check Pantheon site
+      - name: Check Pantheon Site
         run: |
           echo "Checking site..."
-          curl -I --max-time 30 https://test-valorea.pantheonsite.io
+          curl --fail --silent --show-error --location \
+            --retry 2 \
+            --connect-timeout 10 \
+            --max-time 30 \
+            -o /dev/null \
+            https://test-valorea.pantheonsite.io
+
           echo "Site check completed"
+
+      - name: Check Environment
+        run: |
+          echo "Checking environment variables..."
+
+          test -n "$WP_ADMIN_USER" \
+            && echo "WP_ADMIN_USER is set" \
+            || echo "WP_ADMIN_USER is NOT set"
+
+          test -n "$WP_ADMIN_PASS" \
+            && echo "WP_ADMIN_PASS is set" \
+            || echo "WP_ADMIN_PASS is NOT set"
+
+          test -n "$WP_TEST_RECIPIENT_EMAIL" \
+            && echo "WP_TEST_RECIPIENT_EMAIL is set" \
+            || echo "WP_TEST_RECIPIENT_EMAIL is NOT set"
+
+      - name: List Playwright Tests
+        run: |
+          echo "Discovering Playwright tests..."
+          npx playwright test --list
 
       - name: Run Playwright Tests
         run: |
           echo "Starting Playwright..."
           npx playwright --version
+
           echo "Running tests..."
-          timeout --signal=TERM --kill-after=30s 10m npx playwright test --workers=1 --reporter=line
+          timeout --signal=TERM --kill-after=30s 10m \
+            npx playwright test \
+            --workers=1 \
+            --reporter=line
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
