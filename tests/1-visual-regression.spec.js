@@ -6,7 +6,12 @@ import { getFlakyElements, pauseBackgroundVideo } from '../utils/flaky-elements.
 test.describe('Visual regression', () => {
   for (const pageUnderTest of pagesUnderTest) {
     test(`${pageUnderTest.name} — full page matches baseline`, async ({ page }) => {
-      await page.goto(pageUnderTest.path, { waitUntil: 'networkidle' });
+
+      await page.goto(pageUnderTest.path, {
+  waitUntil: 'domcontentloaded',
+  timeout: 30000,
+});
+      
 
       if (pageUnderTest.hasLeadspaceVideo) {
         await pauseBackgroundVideo(page);
