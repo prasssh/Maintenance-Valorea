@@ -24,14 +24,14 @@ test.describe('WP Admin - Restore Contact Form recipient', () => {
     
 
     await page.goto('/admin-console/', {
-      waitUntil: 'networkidle',
+      waitUntil: 'domcontentloaded',
     });
     await page.locator('#user_login').fill(process.env.WP_ADMIN_USER);
     await page.locator('#user_pass').fill(process.env.WP_ADMIN_PASS);
     await page.locator('#wp-submit').click();
     await expect(page.locator('#wpadminbar')).toBeVisible();
 
-    await page.goto(CONTACT_FORM_EDIT_URL, { waitUntil: 'networkidle' });
+    await page.goto(CONTACT_FORM_EDIT_URL, { waitUntil: 'domcontentloaded' });
     await page.getByRole('tab', { name: 'Mail', exact: true }).click();
     const recipientField = page.locator('#wpcf7-mail-recipient');
     await expect(recipientField).toBeVisible();

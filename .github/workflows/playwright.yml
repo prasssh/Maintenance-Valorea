@@ -39,7 +39,7 @@ jobs:
           echo "Starting Playwright..."
           npx playwright --version
           echo "Running tests..."
-          timeout 5m npx playwright test --reporter=line
+          timeout --signal=TERM --kill-after=30s 10m npx playwright test --workers=1 --reporter=line
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v4

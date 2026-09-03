@@ -9,7 +9,7 @@ import { pagesUnderTest } from '../pages.config.js';
 test.describe('Contact form validation', () => {
     test.describe('Home page', () => {
       test.beforeEach(async ({ page }) => {
-        await page.goto('/', { waitUntil: 'networkidle' });
+        await page.goto('/', { waitUntil: 'domcontentloaded' });
 
         // The form sits at the very end of the page — scroll it into view
         // the way a real visitor would reach it.
@@ -66,7 +66,7 @@ test.describe('Contact form validation', () => {
 
 test.describe('Contact form validation - happypath', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/', { waitUntil: 'networkidle' });
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
 
     // The form sits at the very end of the page — scroll it into view
     // the way a real visitor would reach it.

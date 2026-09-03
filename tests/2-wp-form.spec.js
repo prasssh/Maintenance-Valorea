@@ -45,7 +45,7 @@ test.describe('WP Admin - Contact Form recipient swap', () => {
 
     // STEP 1: Log in to WP admin so we have an authenticated session
     await test.step('Log in to WordPress admin', async () => {
-      await page.goto(ADMIN_LOGIN_URL, { waitUntil: 'networkidle' });
+      await page.goto(ADMIN_LOGIN_URL, { waitUntil: 'domcontentloaded' });
       // WP login field selectors
       await page.locator('#user_login').fill(WP_ADMIN_USER);
       await page.locator('#user_pass').fill(WP_ADMIN_PASS);
@@ -57,7 +57,7 @@ test.describe('WP Admin - Contact Form recipient swap', () => {
     // STEP 2: Navigate to the "Get In Touch" form's editor
     // and switch to its Mail tab, where the "To:" recipient field lives
     await test.step('Open the Get In Touch contact form (Mail tab)', async () => {
-      await page.goto(CONTACT_FORM_EDIT_URL, { waitUntil: 'networkidle' });
+      await page.goto(CONTACT_FORM_EDIT_URL, { waitUntil: 'domcontentloaded' });
       await page.getByRole('tab', { name: 'Mail', exact: true }).click();
       await expect(page.locator('#wpcf7-mail-recipient')).toBeVisible();
     });
